@@ -107,13 +107,25 @@ public class DataConversion {
         if(byteArray==null){
             return "";
         }
+
         StringBuffer hexStringBuffer = new StringBuffer();
         for (int i = 0; i < byteArray.length; i++) {
-            hexStringBuffer.append(byteToHex(byteArray[i]));
+            hexStringBuffer.append(byteToHex(getLRC(byteArray)));
         }
         return hexStringBuffer.toString().toUpperCase();
     }
+    //LRC 轉換
+    public static byte getLRC(byte[] data){
+        int tmp=0;
+        for(int i=0;i<data.length;i++){
+            tmp = tmp + data[i];
 
+        }
+        tmp = ~tmp;
+        tmp = (tmp & (0x03));
+        tmp +=1;
+        return  (byte)tmp;
+    }
     /**
      * 十六进制转字节数组
      * @param hexString

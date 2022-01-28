@@ -95,10 +95,12 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
         mSendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent();
-//                intent.setClass(MainActivity.this,SelectSerialPortActivity.class);
-//                startActivity(intent);
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this,SelectSerialPortActivity.class);
+                startActivity(intent);
                 String sendTxt = mSendDataEt.getText().toString().trim();
+                byte[]  binaryValue = sendTxt.getBytes();
+
                 if(TextUtils.isEmpty(sendTxt)){
                     Toast.makeText(MainActivity.this,"请输入发送命令！",Toast.LENGTH_LONG).show();
                     return;
@@ -107,6 +109,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
                     Toast.makeText(MainActivity.this,"命令错误！",Toast.LENGTH_LONG).show();
                     return;
                 }
+
                 serialPortHelper.addCommands(sendTxt);
             }
         });
@@ -154,13 +157,18 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
         serialPortHelper.setSphResultCallback(new SphResultCallback() {
             @Override
             public void onSendData(SphCmdEntity sendCom) {
+                //receiveTxt.append(sendCom.commandsHex);
+
                 Log.d(TAG, "发送命令：" + sendCom.commandsHex);
             }
 
             @Override
             public void onReceiveData(SphCmdEntity data) {
+
+                receiveTxt.append(data.commandsHex).append("\n");
+                mShowReceiveTxt.setText(receiveTxt.toString());
                 Log.d(TAG, "收到命令：" + data.commandsHex);
-                receiveTxt.append(data.commandsHex);
+                //receiveTxt.append(data.commandsHex);
 
 
             }
@@ -178,6 +186,19 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
             output.append((char) Integer.parseInt(str, 16));
         }
         return output.toString();
+    }
+
+    //LRC 轉換
+    public static byte getLRC(byte[] data){
+        int tmp=0;
+        for(int i=0;i<data.length;i++){
+            tmp = tmp + data[i];
+
+        }
+        tmp = ~tmp;
+        tmp = (tmp & (0x03));
+        tmp +=1;
+        return  (byte)tmp;
     }
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -227,6 +248,10 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
 
     public void clearSend(View view) {
         mSendDataEt.setText("");
+    }
+    private void ShowMessage(String sMsg)
+    {
+        Toast.makeText(this, sMsg, Toast.LENGTH_SHORT).show();
     }
 
     public void clearReceive(View view) {

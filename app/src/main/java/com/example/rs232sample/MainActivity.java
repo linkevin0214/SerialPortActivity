@@ -95,9 +95,9 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
         mSendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setClass(MainActivity.this,SelectSerialPortActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent();
+//                intent.setClass(MainActivity.this,SelectSerialPortActivity.class);
+//                startActivity(intent);
                 String sendTxt = mSendDataEt.getText().toString().trim();
                 if(TextUtils.isEmpty(sendTxt)){
                     Toast.makeText(MainActivity.this,"请输入发送命令！",Toast.LENGTH_LONG).show();

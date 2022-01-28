@@ -1,0 +1,5 @@
+
+rootProject.name = "RS232Sample"
+include ':app'
+include ':SerialPortLibrary'
+include ':library'
